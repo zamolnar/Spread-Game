@@ -1,5 +1,10 @@
-[gd_scene format=3 uid="uid://d12xbjoclefly"]
+[gd_scene load_steps=2 format=3 uid="uid://d12xbjoclefly"]
+
+[ext_resource type="PackedScene" uid="uid://ycxal0h7541f" path="res://Assets/PlayerPlaceholder.tscn" id="1_uhc00"]
 
 [node name="main" type="Node"]
 
 [node name="home_world" type="Node2D" parent="."]
+
+[node name="CharacterBody2D" parent="." instance=ExtResource("1_uhc00")]
+position = Vector2(353, 181)
