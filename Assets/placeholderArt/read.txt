@@ -1,0 +1,10 @@
+this whole folder is meant to be deleted
+
+This is a placeholder tile map so josh can try to make procedural generation
+
+The plan: 
+-make a few skeleton types of rooms
+    + possibly some variants of each types
+- algo generates each type of room in a semi-random location
+- entries are connected by (shortest?) pathing algo
+    ?check success using djikstras
