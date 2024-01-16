@@ -1,6 +1,8 @@
 extends Node2D
 
 var Room = preload("res://scenesAndScripts/Room.tscn")
+@onready var Map = $TileMap
+#var Player = preload(player scene reference)
 
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
@@ -40,7 +42,6 @@ func create_rooms():
 	#generate a min spanning tree using Prim's algo
 	primPath = find_mst(room_positions)
 
-
 func _draw():			#strictly for visualizing
 	for room in $Rooms.get_children():
 		draw_rect(Rect2(room.position - room.size, room.size*2), #room sized rectangle
@@ -57,13 +58,14 @@ func _draw():			#strictly for visualizing
 func _process(delta):
 	queue_redraw()
 
-
 func _input(event):
 	if event.is_action_pressed('ui_select'):		#regenerate (for testing)
 		for n in $Rooms.get_children():
 			n.queue_free()
 		primPath = null
 		create_rooms()
+	if event.is_action_pressed('ui_focus_next'):
+		make_map()
 
 
 func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
@@ -90,3 +92,18 @@ func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
 									#continue
 	return path		#return the linked nodes when your done
 	
+	
+func make_map():
+	#create tilemap from generated rooms and path
+	Map.clear()
+	#fill tilemap with walls, then carve empty rooms
+	var full_rect = Rect2()
+	for room in $Rooms.get_children():
+		var r = Rect2(room.position-room.size,	#the top left
+						room.get_node("CollisionShape2D").shape.extents*2)	#full width
+		full_rect = full_rect.merge(r)
+		var topleft = Map.local_to_map(full_rect.position)
+		var bottomright = Map.local_to_map(full_rect.end)
+		for x in range(topleft.x, bottomright.x):
+			for y in range(topleft.y, bottomright.y):
+				Map.set_cell(0,Vector2i(x,y),1,Vector2i(0,0),0)
