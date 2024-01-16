@@ -9,7 +9,7 @@ var max_size = 10		#largest possible length for width/height
 var horizontalSpread = 400		#biases horizontal generation over vertical 
 var theEarthquake = 0.5		#randomly destroys this percent of the rooms (providing better spread)
 
-var primPath	#AStar pathfinding object
+var primPath	#AStar2D pathfinding object
 
 func _ready():
 	randomize()
@@ -36,7 +36,7 @@ func create_rooms():
 			room_positions.append(Vector2(	#add to pos list for Prims
 				room.position.x, room.position.y)) #3d representation of 2d vector
 	 
-	await get_tree().create_timer(1).timeout	#pause for earthquake
+	await get_tree().create_timer(0.3).timeout	#pause for earthquake
 	#generate a min spanning tree using Prim's algo
 	primPath = find_mst(room_positions)
 
