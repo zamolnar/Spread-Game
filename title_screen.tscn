@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://be3ux2a14cdqh"]
+
+[ext_resource type="Texture2D" uid="uid://c7oe8b2dmp4t8" path="res://Assets/placeholderArt/Blue.png" id="1_uwpan"]
+[ext_resource type="Texture2D" uid="uid://dde16i7otk6mo" path="res://Assets/placeholderArt/spreadGameImage.png" id="2_hofnr"]
+
+[node name="TitleScreen" type="Node"]
+
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_uwpan")
+stretch_mode = 1
+
+[node name="TitleTexture" type="TextureRect" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -207.0
+offset_top = 73.0
+offset_right = 215.0
+offset_bottom = 149.0
+grow_horizontal = 2
+texture = ExtResource("2_hofnr")
+
+[node name="Button" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.0
+offset_top = 27.0
+offset_right = 146.0
+offset_bottom = 126.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 51
+text = "Start"
