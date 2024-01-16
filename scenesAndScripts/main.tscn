@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://d12xbjoclefly"]
 
-[ext_resource type="PackedScene" uid="uid://ycxal0h7541f" path="res://scenes/PlayerPlaceholder.tscn" id="1_vj82f"]
+[ext_resource type="PackedScene" uid="uid://ycxal0h7541f" path="res://scenesAndScripts/PlayerPlaceholder.tscn" id="1_vj82f"]
 
 [node name="main" type="Node"]
 

@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://be3ux2a14cdqh"]
 
-[ext_resource type="Script" path="res://scripts/title_screen.gd" id="1_kjxbr"]
-[ext_resource type="Texture2D" uid="uid://c7oe8b2dmp4t8" path="res://Assets/placeholderArt/Blue.png" id="2_no5qm"]
-[ext_resource type="Texture2D" uid="uid://dde16i7otk6mo" path="res://Assets/placeholderArt/spreadGameImage.png" id="3_ghup1"]
+[ext_resource type="Script" path="res://scenesAndScripts/Title_screen.gd" id="1_lme83"]
+[ext_resource type="Texture2D" uid="uid://c7oe8b2dmp4t8" path="res://Assets/placeholderArt/Blue.png" id="2_vaewm"]
+[ext_resource type="Texture2D" uid="uid://dde16i7otk6mo" path="res://Assets/placeholderArt/spreadGameImage.png" id="3_2ogqm"]
 
 [node name="TitleScreen" type="Node"]
-script = ExtResource("1_kjxbr")
+script = ExtResource("1_lme83")
 
 [node name="BackgroundTexture" type="TextureRect" parent="."]
 anchors_preset = 15
@@ -13,7 +13,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_no5qm")
+texture = ExtResource("2_vaewm")
 stretch_mode = 1
 
 [node name="TitleTexture" type="TextureRect" parent="."]
@@ -25,7 +25,7 @@ offset_top = 73.0
 offset_right = 215.0
 offset_bottom = 149.0
 grow_horizontal = 2
-texture = ExtResource("3_ghup1")
+texture = ExtResource("3_2ogqm")
 
 [node name="Button" type="Button" parent="."]
 anchors_preset = 8
