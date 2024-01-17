@@ -13,6 +13,9 @@ var theEarthquake = 0.5		#randomly destroys this percent of the rooms (providing
 
 var primPath	#AStar2D pathfinding object
 
+#player variables
+
+
 func _ready():
 	randomize()
 	create_rooms()
@@ -96,7 +99,7 @@ func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
 func make_map():
 	#create tilemap from generated rooms and path
 	Map.clear()
-	#fill tilemap with walls, then carve empty rooms
+	#fill tilemap with walls
 	var full_rect = Rect2()
 	for room in $Rooms.get_children():
 		var r = Rect2(room.position-room.size,	#the top left
@@ -104,9 +107,66 @@ func make_map():
 		full_rect = full_rect.merge(r)
 		var topleft = Map.local_to_map(full_rect.position)
 		var bottomright = Map.local_to_map(full_rect.end)
-		for x in range(topleft.x, bottomright.x+1):
-			for y in range(topleft.y, bottomright.y+1):
-				Map.set_cell(0,		#layer ID
-				Vector2i(x,y),		#coordinate x,y
-				0,					#tile ID
-				Vector2i(7,1))	#change if using an atlas
+		for x in range(topleft.x-1, bottomright.x+2):
+			for y in range(topleft.y-1, bottomright.y+2):
+				Map.set_cell(0,			#layer ID
+					Vector2i(x,y),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(1,1))		#atlas coordinate (in tile set)
+				
+	#carve rooms and corridors
+	var corridors = []		#one corridor per connection
+	#rooms
+	for room in $Rooms.get_children():
+		var s = (room.size / (tile_size/2)).floor()
+		#var pos = Map.local_to_map(room.position)
+		var ul = (room.position / (tile_size/2)).floor() - s	#upper left of room
+		for x in range(2, s.x * 2 - 1):			#starting at 2 allows adjacent rooms to have a wall b/w them
+			for y in range(2, s.y * 2 - 1):
+				Map.set_cell(0,			#layer ID
+					Vector2i(ul.x+ x, ul.y+ y),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(7,1))		#atlas coordinate (in tile set)
+		#corridors
+		var p = primPath.get_closest_point(room.position)
+		for conn in primPath.get_point_connections(p):
+			if not conn in corridors:
+				var start = Map.local_to_map(Vector2(primPath.get_point_position(p).x,
+												primPath.get_point_position(p).y))
+				var end = Map.local_to_map(Vector2(primPath.get_point_position(conn).x,
+												primPath.get_point_position(conn).y))
+				carve_path(start, end)
+			corridors.append(p)
+			
+func carve_path(pos1, pos2):
+	#carve path between 2 points
+	var x_diff = sign(pos2.x - pos1.x)
+	var y_diff = sign(pos2.y - pos1.y)
+	if x_diff == 0: x_diff = pow(-1.0, randi() %2)
+	if y_diff == 0: y_diff = pow(-1.0, randi() %2)
+	#choose direction // x then y or y then x
+	var x_y = pos1
+	var y_x = pos2
+	if (randi() %2)>0:
+		x_y = pos2
+		y_x = pos1
+	for x in range(pos1.x, pos2.x, x_diff):
+		Map.set_cell(0,			#layer ID
+					Vector2i(x, x_y.y),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(7,1))		#atlas coordinate (in tile set)
+		#widen the corridor
+		Map.set_cell(0,			#layer ID
+					Vector2i(x, x_y.y +y_diff),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(7,1))		#atlas coordinate (in tile set)
+	for y in range(pos1.y, pos2.y, y_diff):
+		Map.set_cell(0,			#layer ID
+					Vector2i(y_x.x, y),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(7,1))		#atlas coordinate (in tile set)
+		#widen the corridor
+		Map.set_cell(0,			#layer ID
+					Vector2i(y_x.x +x_diff, y),		#coordinate x,y
+					0,					#tile ID
+					Vector2i(7,1))		#atlas coordinate (in tile set)
