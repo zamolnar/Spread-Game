@@ -104,6 +104,9 @@ func make_map():
 		full_rect = full_rect.merge(r)
 		var topleft = Map.local_to_map(full_rect.position)
 		var bottomright = Map.local_to_map(full_rect.end)
-		for x in range(topleft.x, bottomright.x):
-			for y in range(topleft.y, bottomright.y):
-				Map.set_cell(0,Vector2i(x,y),1,Vector2i(0,0),0)
+		for x in range(topleft.x, bottomright.x+1):
+			for y in range(topleft.y, bottomright.y+1):
+				Map.set_cell(0,		#layer ID
+				Vector2i(x,y),		#coordinate x,y
+				0,					#tile ID
+				Vector2i(7,1))	#change if using an atlas
