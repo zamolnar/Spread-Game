@@ -2,7 +2,7 @@ extends Node2D
 
 var Room = preload("res://scenesAndScripts/Room.tscn")
 @onready var Map = $TileMap
-#var Player = preload(player scene reference)
+var Player = preload("res://scenesAndScripts/PlayerPlaceholder.tscn")
 
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
@@ -14,7 +14,10 @@ var theEarthquake = 0.5		#randomly destroys this percent of the rooms (providing
 var primPath	#AStar2D pathfinding object
 
 #player variables
-
+var start_room = null
+var boss_room = null
+var play_mode = false
+var player = null
 
 func _ready():
 	randomize()
@@ -46,6 +49,9 @@ func create_rooms():
 	primPath = find_mst(room_positions)
 
 func _draw():			#strictly for visualizing
+	if play_mode:
+		return
+	
 	for room in $Rooms.get_children():
 		draw_rect(Rect2(room.position - room.size, room.size*2), #room sized rectangle
 		Color(0,128,128), false)			#teal color, not filled in
@@ -62,13 +68,23 @@ func _process(delta):
 	queue_redraw()
 
 func _input(event):
-	if event.is_action_pressed('ui_select'):		#regenerate (for testing)
+	if event.is_action_pressed('ui_select'):		#regenerate
+		if play_mode:
+			player.queue_free()
+			play_mode = false
 		for n in $Rooms.get_children():
 			n.queue_free()
 		primPath = null
+		start_room = null
+		boss_room = null
 		create_rooms()
 	if event.is_action_pressed('ui_focus_next'):
 		make_map()
+	if event.is_action_pressed('ui_cancel'):
+		player = Player.instance()
+		add_child(player)
+		player.position = start_room.position
+		play_mode = true
 
 
 func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
