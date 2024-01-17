@@ -2,7 +2,7 @@ extends Node2D
 
 var Room = preload("res://scenesAndScripts/Room.tscn")
 @onready var Map = $TileMap
-var Player = preload("res://scenesAndScripts/PlayerPlaceholder.tscn")
+var Player = preload("res://scenesAndScripts/player.tscn")
 
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
