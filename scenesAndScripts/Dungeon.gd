@@ -3,6 +3,7 @@ extends Node2D
 var Room = preload("res://scenesAndScripts/Room.tscn")
 @onready var Map = $TileMap
 var Player = preload("res://scenesAndScripts/player.tscn")
+var font = preload("res://Assets/placeholderArt/Roboto-Black.ttf")
 
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
@@ -22,6 +23,7 @@ var player = null
 func _ready():
 	randomize()
 	create_rooms()
+
 	
 func create_rooms():
 	for i in range(num_rooms):
@@ -32,8 +34,9 @@ func create_rooms():
 		roomInstance.room_create(pos, Vector2(width,height)* tile_size)	#room create
 		$Rooms.add_child(roomInstance)		#keep track of rooms in a list
 	
+	
 #wait for engine to finish spreading rooms out
-	await get_tree().create_timer(1).timeout	#pause for rooms to spread out
+	await get_tree().create_timer(0.5).timeout	#pause for rooms to spread out
 # remove rooms (possibly)
 	var room_positions = []
 	for room in $Rooms.get_children():
@@ -43,12 +46,17 @@ func create_rooms():
 			room.freeze = true		#hold the room still
 			room_positions.append(Vector2(	#add to pos list for Prims
 				room.position.x, room.position.y)) #3d representation of 2d vector
-	 
-	await get_tree().create_timer(0.3).timeout	#pause for earthquake
+	
+	await get_tree().create_timer(1).timeout	#pause for earthquake
 	#generate a min spanning tree using Prim's algo
 	primPath = find_mst(room_positions)
 
+
 func _draw():			#strictly for visualizing
+	if start_room:
+		draw_string(font, start_room.position-Vector2(125,0), "start")
+	if boss_room:
+		draw_string(font, start_room.position-Vector2(125,0), "boss")
 	if play_mode:
 		return
 	
@@ -64,8 +72,10 @@ func _draw():			#strictly for visualizing
 				draw_line(Vector2(pp.x,pp.y), Vector2(cp.x,cp.y),
 							Color(255,200,50), 15, true)
 
+
 func _process(delta):
 	queue_redraw()
+
 
 func _input(event):
 	if event.is_action_pressed('ui_select'):		#regenerate
@@ -74,17 +84,23 @@ func _input(event):
 			play_mode = false
 		for n in $Rooms.get_children():
 			n.queue_free()
+		Map.clear()
 		primPath = null
 		start_room = null
 		boss_room = null
+		await get_tree().create_timer(0.5).timeout
 		create_rooms()
+		
 	if event.is_action_pressed('ui_focus_next'):
 		make_map()
+		
 	if event.is_action_pressed('ui_cancel'):
 		player = Player.instance()
 		add_child(player)
 		player.position = start_room.position
 		play_mode = true
+		player.Camera2D.align()
+		player.Camera2D.zoom(1,1)
 
 
 func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
@@ -154,6 +170,7 @@ func make_map():
 				carve_path(start, end)
 			corridors.append(p)
 			
+			
 func carve_path(pos1, pos2):
 	#carve path between 2 points
 	var x_diff = sign(pos2.x - pos1.x)
@@ -186,3 +203,4 @@ func carve_path(pos1, pos2):
 					Vector2i(y_x.x +x_diff, y),		#coordinate x,y
 					0,					#tile ID
 					Vector2i(7,1))		#atlas coordinate (in tile set)
+
