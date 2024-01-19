@@ -1,18 +1,88 @@
-[gd_scene load_steps=3 format=3 uid="uid://biso4s5s1f6q4"]
+[gd_scene load_steps=18 format=3 uid="uid://biso4s5s1f6q4"]
 
 [ext_resource type="Script" path="res://scenesAndScripts/Enemy1.gd" id="1_rdliy"]
 [ext_resource type="Script" path="res://scenesAndScripts/States/Enemy1_FSM.gd" id="1_ruokr"]
+[ext_resource type="Texture2D" uid="uid://b3hil0s6wwyot" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_000.png" id="2_e6wga"]
+[ext_resource type="Texture2D" uid="uid://tegdpksx6bg2" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_001.png" id="3_jb7bb"]
+[ext_resource type="Texture2D" uid="uid://cewjyc5xe1j2v" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_002.png" id="4_21auw"]
+[ext_resource type="Texture2D" uid="uid://btxoc68fsc5ls" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_003.png" id="5_wg2s5"]
+[ext_resource type="Texture2D" uid="uid://bdpxjwpgknjjk" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_004.png" id="6_hgrx7"]
+[ext_resource type="Texture2D" uid="uid://drcj4kl0vbrcr" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_005.png" id="7_blwna"]
+[ext_resource type="Texture2D" uid="uid://20ohmfnoea3g" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_006.png" id="8_jg5vi"]
+[ext_resource type="Texture2D" uid="uid://heegrx23pmn0" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_007.png" id="9_fiesw"]
+[ext_resource type="Texture2D" uid="uid://rchl6fuv1d11" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_008.png" id="10_8h328"]
+[ext_resource type="Texture2D" uid="uid://bq23xsps2agcs" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_009.png" id="11_4qlcc"]
+[ext_resource type="Texture2D" uid="uid://sa5h1uats10w" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_010.png" id="12_7nilo"]
+[ext_resource type="Texture2D" uid="uid://cla2teb5lurqf" path="res://Assets/placeholderArt/TINY CAT SPRITE/01_Idle/__Cat_Idle_011.png" id="13_chdgu"]
+[ext_resource type="Script" path="res://scenesAndScripts/States/Enemy1Idle.gd" id="15_msf24"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kkdko"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_e6wga")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_jb7bb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_21auw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_wg2s5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_hgrx7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_blwna")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_jg5vi")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_fiesw")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_8h328")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_4qlcc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_7nilo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_chdgu")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_85xfy"]
+radius = 21.0
+height = 64.0
 
 [node name="Enemy1" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 6
 script = ExtResource("1_rdliy")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(63, 55)
+scale = Vector2(0.2, 0.2)
+sprite_frames = SubResource("SpriteFrames_kkdko")
+animation = &"idle"
 
-[node name="Enemy1FSM" type="Node" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(43, 57)
+shape = SubResource("CapsuleShape2D_85xfy")
+
+[node name="Enemy1_FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("1_ruokr")
+initial_state = NodePath("EnemyIdle")
 
-[node name="Offscreen" type="Node" parent="Enemy1FSM"]
-
-[node name="Idle" type="Node" parent="Enemy1FSM"]
-
-[node name="Attack" type="Node" parent="Enemy1FSM"]
+[node name="EnemyIdle" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy1")]
+script = ExtResource("15_msf24")
+enemy1 = NodePath("../..")
