@@ -1,26 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://biso4s5s1f6q4"]
+[gd_scene load_steps=3 format=3 uid="uid://biso4s5s1f6q4"]
 
-[ext_resource type="Script" path="res://scenesAndScripts/Enemy1_FSM.gd" id="1_ruokr"]
+[ext_resource type="Script" path="res://scenesAndScripts/Enemy1.gd" id="1_rdliy"]
+[ext_resource type="Script" path="res://scenesAndScripts/States/Enemy1_FSM.gd" id="1_ruokr"]
 
-[node name="Enemy1" type="Node2D"]
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="Enemy1" type="CharacterBody2D"]
+script = ExtResource("1_rdliy")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-
-[node name="EnemyFSM" type="Node" parent="." node_paths=PackedStringArray("enemy", "animation_tree")]
+[node name="Enemy1FSM" type="Node" parent="."]
 script = ExtResource("1_ruokr")
-enemy = NodePath("../CharacterBody2D")
-animation_tree = NodePath("../AnimationTree")
 
-[node name="Offscreen" type="Node" parent="EnemyFSM"]
+[node name="Offscreen" type="Node" parent="Enemy1FSM"]
 
-[node name="Attack_activation" type="Node" parent="EnemyFSM"]
+[node name="Idle" type="Node" parent="Enemy1FSM"]
 
-[node name="Attack_windup" type="Node" parent="EnemyFSM"]
-
-[node name="Idle" type="Node" parent="EnemyFSM"]
+[node name="Attack" type="Node" parent="Enemy1FSM"]
