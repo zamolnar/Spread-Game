@@ -1,5 +1,5 @@
 extends State
-class_name EnemyIdle
+class_name Enemy1Idle
 @onready var animated_sprite_2d = $"../../AnimatedSprite2D"
 
 #state exports
@@ -12,11 +12,11 @@ var wander_time : float
 
 #override inherited methods
 func Enter():
-	animated_sprite_2d.animation = "idle"
 	randomize_wander()
 
 
 func State_Update(delta: float):
+	animated_sprite_2d.play("idle")
 	if wander_time > 0:
 		wander_time -= delta
 	else:

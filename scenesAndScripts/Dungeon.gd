@@ -80,7 +80,8 @@ func _input(event):
 		#find start and boss rooms
 		find_start_room()
 		find_boss_room()
-		
+
+#TESTING spawn enemies, needs work
 	if event.is_action_pressed('ui_cancel'):
 		player = Player.instantiate()
 		add_child(player)
