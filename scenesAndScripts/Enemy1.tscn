@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://biso4s5s1f6q4"]
 
-[ext_resource type="Script" path="res://scenesAndScripts/Enemy_FSM.gd" id="1_jhl70"]
+[ext_resource type="Script" path="res://scenesAndScripts/Enemy1_FSM.gd" id="1_ruokr"]
 
-[node name="Enemy" type="Node2D"]
+[node name="Enemy1" type="Node2D"]
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 
@@ -13,7 +13,7 @@
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 
 [node name="EnemyFSM" type="Node" parent="." node_paths=PackedStringArray("enemy", "animation_tree")]
-script = ExtResource("1_jhl70")
+script = ExtResource("1_ruokr")
 enemy = NodePath("../CharacterBody2D")
 animation_tree = NodePath("../AnimationTree")
 
