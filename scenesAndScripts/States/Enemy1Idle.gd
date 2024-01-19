@@ -4,7 +4,7 @@ class_name Enemy1Idle
 
 #state exports
 @export var enemy1: CharacterBody2D
-@export var move_speed := 300
+@export var move_speed := 200
 
 #state variables
 var move_direction : Vector2
