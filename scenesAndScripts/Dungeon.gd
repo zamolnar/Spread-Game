@@ -13,8 +13,8 @@ var primPath	#AStar2D pathfinding object
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
 var min_size = 4		#smallest possible length for width/height
-var max_size = 10		#largest possible length for width/height
-var horizontalSpread = 400		#biases horizontal generation over vertical 
+var max_size = 8		#largest possible length for width/height
+var horizontalSpread = 300		#biases horizontal generation over vertical 
 var theEarthquake = 0.5		#randomly destroys this percent of the rooms (providing better spread)
 
 #playMode variables
