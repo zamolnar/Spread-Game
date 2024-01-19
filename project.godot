@@ -50,6 +50,12 @@ Down={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="rooms"
+2d_physics/layer_2="characters"
+2d_physics/layer_3="walls"
+
 [physics]
 
 2d/default_gravity=0.0
