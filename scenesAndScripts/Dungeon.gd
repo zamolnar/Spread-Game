@@ -84,8 +84,8 @@ func _input(event):
 		add_child(player)
 		player.position = start_room.position
 		play_mode = true
-		player.Camera2D.align()
-		player.Camera2D.zoom(1,1)
+		#Camera2D.align()
+		#Camera2D.zoom(1,1)
 
 #creates random floor layout, calls prims algo
 func create_rooms():
