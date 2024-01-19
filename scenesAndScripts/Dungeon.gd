@@ -1,10 +1,15 @@
 extends Node2D
 
+#universal variables
+
+#objects
 var Room = preload("res://scenesAndScripts/Room.tscn")
 @onready var Map = $TileMap
-var Player = preload("res://scenesAndScripts/player.tscn")
+@onready var Player = preload("res://scenesAndScripts/player.tscn")
 var font = preload("res://Assets/placeholderArt/Roboto-Black.ttf")
+var primPath	#AStar2D pathfinding object
 
+#parameter variables
 var tile_size = 32		#size of tiles from tilemap
 var num_rooms = 50		#number rooms for initial generate (gets cut down later)
 var min_size = 4		#smallest possible length for width/height
@@ -12,19 +17,77 @@ var max_size = 10		#largest possible length for width/height
 var horizontalSpread = 400		#biases horizontal generation over vertical 
 var theEarthquake = 0.5		#randomly destroys this percent of the rooms (providing better spread)
 
-var primPath	#AStar2D pathfinding object
-
-#player variables
+#playMode variables
+var play_mode = false
 var start_room = null
 var boss_room = null
-var play_mode = false
 var player = null
 
+#calls / instantiates on pressing play
 func _ready():
 	randomize()
 	create_rooms()
 
+#control flow for imaging
+func _draw():			#strictly for visualizing
+	if start_room:
+		draw_string(font, 		#font
+					start_room.position-Vector2(125,0), #pos
+					"start", 	#text
+					0, 			#alignment
+					-1, 		#width
+					52)			#font size
+	if boss_room:
+		draw_string(font, boss_room.position-Vector2(125,0), "boss", 0, -1, 52)
+	if play_mode:
+		return
 	
+	for room in $Rooms.get_children():
+		draw_rect(Rect2(room.position - room.size, room.size*2), #room sized rectangle
+		Color(0,128,128), false)			#teal color, not filled in
+		
+	if primPath:
+		for point in primPath.get_point_ids():
+			for connection in primPath.get_point_connections(point):
+				var pp = primPath.get_point_position(point)
+				var cp = primPath.get_point_position(connection)
+				draw_line(Vector2(pp.x,pp.y), Vector2(cp.x,cp.y),
+							Color(255,200,50), 15, true)
+
+#not sure but it is necessary
+func _process(delta):
+	queue_redraw()
+
+#current control flow for testing
+func _input(event):
+	if event.is_action_pressed('ui_select'):		#regenerate
+		if play_mode:
+			player.queue_free()
+			play_mode = false
+		for n in $Rooms.get_children():
+			n.queue_free()
+		Map.clear()
+		primPath = null
+		start_room = null
+		boss_room = null
+		await get_tree().create_timer(0.5).timeout
+		create_rooms()
+		
+	if event.is_action_pressed('ui_focus_next'):
+		make_map()
+		#find start and boss rooms
+		find_start_room()
+		find_boss_room()
+		
+	if event.is_action_pressed('ui_cancel'):
+		player = Player.instantiate()
+		add_child(player)
+		player.position = start_room.position
+		play_mode = true
+		player.Camera2D.align()
+		player.Camera2D.zoom(1,1)
+
+#creates random floor layout, calls prims algo
 func create_rooms():
 	for i in range(num_rooms):
 		var pos = Vector2(randi_range(-horizontalSpread, horizontalSpread),0)						#the origin of the 2d plane, position is already a keyword so use pos
@@ -51,59 +114,8 @@ func create_rooms():
 	#generate a min spanning tree using Prim's algo
 	primPath = find_mst(room_positions)
 
-
-func _draw():			#strictly for visualizing
-	if start_room:
-		draw_string(font, start_room.position-Vector2(125,0), "start")
-	if boss_room:
-		draw_string(font, start_room.position-Vector2(125,0), "boss")
-	if play_mode:
-		return
-	
-	for room in $Rooms.get_children():
-		draw_rect(Rect2(room.position - room.size, room.size*2), #room sized rectangle
-		Color(0,128,128), false)			#teal color, not filled in
-		
-	if primPath:
-		for point in primPath.get_point_ids():
-			for connection in primPath.get_point_connections(point):
-				var pp = primPath.get_point_position(point)
-				var cp = primPath.get_point_position(connection)
-				draw_line(Vector2(pp.x,pp.y), Vector2(cp.x,cp.y),
-							Color(255,200,50), 15, true)
-
-
-func _process(delta):
-	queue_redraw()
-
-
-func _input(event):
-	if event.is_action_pressed('ui_select'):		#regenerate
-		if play_mode:
-			player.queue_free()
-			play_mode = false
-		for n in $Rooms.get_children():
-			n.queue_free()
-		Map.clear()
-		primPath = null
-		start_room = null
-		boss_room = null
-		await get_tree().create_timer(0.5).timeout
-		create_rooms()
-		
-	if event.is_action_pressed('ui_focus_next'):
-		make_map()
-		
-	if event.is_action_pressed('ui_cancel'):
-		player = Player.instance()
-		add_child(player)
-		player.position = start_room.position
-		play_mode = true
-		player.Camera2D.align()
-		player.Camera2D.zoom(1,1)
-
-
-func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
+#Prim's Algo--------------a pain in my ass
+func find_mst(nodes):
 	var path = AStar2D.new()	#A*
 	path.add_point(path.get_available_point_id(), nodes.pop_front())	#start at first node
 #repeat for all nodes
@@ -126,11 +138,13 @@ func find_mst(nodes):			#Prim's Algo--------------a pain in my ass
 		nodes.erase(minPosition)	#take it out of the system
 									#continue
 	return path		#return the linked nodes when your done
-	
-	
+
+#activate after Prim's, finds start/boss rooms, covers everything in wall tiles
+#then it calls carve
 func make_map():
 	#create tilemap from generated rooms and path
 	Map.clear()
+	
 	#fill tilemap with walls
 	var full_rect = Rect2()
 	for room in $Rooms.get_children():
@@ -169,8 +183,9 @@ func make_map():
 												primPath.get_point_position(conn).y))
 				carve_path(start, end)
 			corridors.append(p)
-			
-			
+
+#inserts the walkable tiles amock the walls, then uses
+#Prim's path to carve walkways between rooms
 func carve_path(pos1, pos2):
 	#carve path between 2 points
 	var x_diff = sign(pos2.x - pos1.x)
@@ -204,3 +219,18 @@ func carve_path(pos1, pos2):
 					0,					#tile ID
 					Vector2i(7,1))		#atlas coordinate (in tile set)
 
+#currently finds leftmost room and makes it the start
+func find_start_room():
+	var min_x = INF
+	for room in $Rooms.get_children():
+		if room.position.x < min_x:
+			start_room = room
+			min_x = room.position.x
+
+#currently finds rightmost room and makes it the boss
+func find_boss_room():
+	var max_x = -INF
+	for room in $Rooms.get_children():
+		if room.position.x > max_x:
+			boss_room = room
+			max_x = room.position.x
