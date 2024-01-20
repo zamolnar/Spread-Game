@@ -6,12 +6,13 @@ extends Node2D
 var Room = preload("res://scenesAndScripts/Room.tscn")
 @onready var Map = $TileMap
 @onready var Player = preload("res://scenesAndScripts/player.tscn")
+@onready var enemy1 = preload("res://scenesAndScripts/Enemy1.tscn")
 var font = preload("res://Assets/placeholderArt/Roboto-Black.ttf")
 var primPath	#AStar2D pathfinding object
 
 #parameter variables
 var tile_size = 32		#size of tiles from tilemap
-var num_rooms = 50		#number rooms for initial generate (gets cut down later)
+var num_rooms = 5		#number rooms for initial generate (gets cut down later)
 var min_size = 4		#smallest possible length for width/height
 var max_size = 8		#largest possible length for width/height
 var horizontalSpread = 300		#biases horizontal generation over vertical 
@@ -22,11 +23,13 @@ var play_mode = false
 var start_room = null
 var boss_room = null
 var player = null
+var Enemy1 = null
 
 #calls / instantiates on pressing play
 func _ready():
 	randomize()
 	create_rooms()
+	
 
 #control flow for imaging
 func _draw():			#strictly for visualizing
@@ -61,31 +64,8 @@ func _process(delta):
 #current control flow for testing
 func _input(event):
 	if event.is_action_pressed('ui_select'):		#regenerate
-		if play_mode:
-			player.queue_free()
-			play_mode = false
-		for n in $Rooms.get_children():
-			n.queue_free()
-		Map.clear()
-		primPath = null
-		start_room = null
-		boss_room = null
-		await get_tree().create_timer(0.5).timeout
-		create_rooms()
+		resetGame()
 		
-	if event.is_action_pressed('ui_focus_next'):
-		make_map()
-		#find start and boss rooms
-		find_start_room()
-		find_boss_room()
-		
-	if event.is_action_pressed('ui_cancel'):
-		player = Player.instantiate()
-		add_child(player)
-		player.position = start_room.position
-		play_mode = true
-		#Camera2D.align()
-		#Camera2D.zoom(1,1)
 
 #creates random floor layout, calls prims algo
 func create_rooms():
@@ -110,9 +90,18 @@ func create_rooms():
 			room_positions.append(Vector2(	#add to pos list for Prims
 				room.position.x, room.position.y)) #3d representation of 2d vector
 	
-	await get_tree().create_timer(1).timeout	#pause for earthquake
+	await get_tree().create_timer(.5).timeout	#pause for earthquake
 	#generate a min spanning tree using Prim's algo
+	
 	primPath = find_mst(room_positions)
+	await get_tree().create_timer(.5).timeout	#pause for path
+	make_map()
+		#find start and boss rooms
+	find_start_room()
+	find_boss_room()
+	
+	await get_tree().create_timer(.2).timeout	#pause for ready
+	startGame()
 
 #Prim's Algo--------------a pain in my ass
 func find_mst(nodes):
@@ -234,3 +223,31 @@ func find_boss_room():
 		if room.position.x > max_x:
 			boss_room = room
 			max_x = room.position.x
+
+#calls all algorithms for generating a level and initializing the game
+func startGame():
+	player = Player.instantiate()
+	add_child(player)
+	player.position = start_room.position
+	Enemy1 = enemy1.instantiate()
+	add_child(Enemy1)
+	Enemy1.position = boss_room.position
+	play_mode = true
+		#Camera2D.align()
+		#Camera2D.zoom(1,1)
+
+#clears all memory then calls start game
+func resetGame():
+	if play_mode:
+		player.queue_free()
+		Enemy1.queue_free()
+		play_mode = false
+	for n in $Rooms.get_children():
+		n.queue_free()
+	Map.clear()
+	primPath = null
+	start_room = null
+	boss_room = null
+	await get_tree().create_timer(0.5).timeout
+	create_rooms()
+
