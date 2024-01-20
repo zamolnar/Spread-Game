@@ -86,15 +86,12 @@ func _input(event):
 		player = Player.instantiate()
 		add_child(player)
 		player.position = start_room.position
+		Enemy1 = enemy1.instantiate()
+		add_child(Enemy1)
+		Enemy1.position = boss_room.position
 		play_mode = true
 		#Camera2D.align()
 		#Camera2D.zoom(1,1)
-
-	if event.is_action_pressed("right_click"):
-		Enemy1 = enemy1.instantiate()
-		add_child(Enemy1)
-		Enemy1.position = player.position
-		
 
 #creates random floor layout, calls prims algo
 func create_rooms():

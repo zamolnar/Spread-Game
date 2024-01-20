@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://biso4s5s1f6q4"]
+[gd_scene load_steps=29 format=3 uid="uid://biso4s5s1f6q4"]
 
 [ext_resource type="Script" path="res://scenesAndScripts/Enemy1.gd" id="1_rdliy"]
 [ext_resource type="Script" path="res://scenesAndScripts/States/Enemy1_FSM.gd" id="1_ruokr"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" uid="uid://cmx3finccoamg" path="res://Assets/placeholderArt/TINY CAT SPRITE/02_Run/__Cat_Run_007.png" id="21_go6mq"]
 [ext_resource type="Texture2D" uid="uid://bpncuh4n5bi85" path="res://Assets/placeholderArt/TINY CAT SPRITE/02_Run/__Cat_Run_008.png" id="22_jwm3g"]
 [ext_resource type="Texture2D" uid="uid://bf45c2fs88dme" path="res://Assets/placeholderArt/TINY CAT SPRITE/02_Run/__Cat_Run_009.png" id="23_jhb0t"]
+[ext_resource type="Script" path="res://scenesAndScripts/States/Enemy1Follow.gd" id="26_iu8ih"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_kkdko"]
 animations = [{
@@ -111,7 +112,7 @@ height = 64.0
 
 [node name="Enemy1" type="CharacterBody2D"]
 collision_layer = 2
-collision_mask = 6
+collision_mask = 4
 script = ExtResource("1_rdliy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -124,10 +125,14 @@ animation = &"idle"
 position = Vector2(43, 57)
 shape = SubResource("CapsuleShape2D_85xfy")
 
-[node name="Enemy1_FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+[node name="Enemy1_FSM" type="Node" parent="."]
 script = ExtResource("1_ruokr")
-initial_state = NodePath("EnemyIdle")
 
-[node name="EnemyIdle" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy1")]
+[node name="Enemy1Idle" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy1")]
 script = ExtResource("15_msf24")
 enemy1 = NodePath("../..")
+move_speed = null
+
+[node name="Enemy1Follow" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy")]
+script = ExtResource("26_iu8ih")
+enemy = NodePath("../..")
