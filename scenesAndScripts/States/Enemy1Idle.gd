@@ -2,7 +2,7 @@ extends State
 class_name Enemy1Idle
 @onready var animated_sprite_2d = $"../../AnimatedSprite2D"
 
-#state exports
+var player : CharacterBody2D
 @export var enemy1: CharacterBody2D
 @export var move_speed := 200
 
@@ -26,7 +26,10 @@ func State_Update(delta: float):
 func State_Physics_Update(delta: float):
 	if enemy1:
 		enemy1.velocity = move_direction * move_speed
-
+		
+	var direction = player.global_position - enemy1.global_position
+	if direction.length() < 50:
+		Transitioned.emit(self, "Enemy1Idle")
 
 #methods specific to idle
 func randomize_wander():
