@@ -450,6 +450,7 @@ script = ExtResource("1_djrhe")
 [node name="Rooms" type="Node" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.1, 0.1)
 
 [node name="TileMap" type="TileMap" parent="."]
 show_behind_parent = true
