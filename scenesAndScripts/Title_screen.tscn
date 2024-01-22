@@ -34,12 +34,28 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -144.0
-offset_top = 27.0
+offset_top = -99.0
 offset_right = 146.0
-offset_bottom = 126.0
+offset_bottom = -0.000732422
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 51
 text = "Start"
 
+[node name="SettingsButton" type="Button" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -145.0
+offset_top = 27.0
+offset_right = 145.0
+offset_bottom = 127.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 51
+text = "Settings"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_button_pressed"]

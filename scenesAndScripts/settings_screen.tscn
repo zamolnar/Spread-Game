@@ -1,0 +1,229 @@
+[gd_scene load_steps=6 format=3 uid="uid://ciu7in1rygxxf"]
+
+[ext_resource type="Script" path="res://scenesAndScripts/settings_screen.gd" id="1_bq8on"]
+[ext_resource type="Texture2D" uid="uid://c7oe8b2dmp4t8" path="res://Assets/placeholderArt/Blue.png" id="1_tr2tq"]
+[ext_resource type="AudioStream" uid="uid://dgmp20dhs70mf" path="res://Assets/music/Pirate_Level_inactive.wav" id="3_6i453"]
+[ext_resource type="AudioStream" uid="uid://b5hku5gldt0hj" path="res://Assets/music/Pirate_Level_active.wav" id="3_acoc3"]
+[ext_resource type="AudioStream" uid="uid://db2g4pmlo8n51" path="res://Assets/music/Pirate_Title.wav" id="4_foqg4"]
+
+[node name="Settings_screen" type="Node"]
+script = ExtResource("1_bq8on")
+
+[node name="ActiveMusicBus" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_acoc3")
+volume_db = -40.0
+bus = &"Active"
+
+[node name="InactiveMusicBus" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_6i453")
+volume_db = -40.0
+autoplay = true
+bus = &"Inactive"
+
+[node name="TitleMusicBus" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_foqg4")
+volume_db = -40.0
+bus = &"Title"
+
+[node name="BossMusicBus" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_acoc3")
+volume_db = -40.0
+bus = &"Boss"
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackGroundTexture" type="TextureRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+texture = ExtResource("1_tr2tq")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Options" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.498
+anchor_top = 0.104
+anchor_right = 0.498
+anchor_bottom = 0.104
+offset_left = -47.696
+offset_top = -17.392
+offset_right = 48.3041
+offset_bottom = 17.608
+grow_horizontal = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 25
+text = "Options"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MaxVolume" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.498
+anchor_top = 0.272
+anchor_right = 0.498
+anchor_bottom = 0.272
+offset_left = -47.696
+offset_top = -11.256
+offset_right = 48.3041
+offset_bottom = 11.744
+grow_horizontal = 2
+grow_vertical = 2
+text = "Max Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MaxVolumeSlider" type="HSlider" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.328
+anchor_right = 0.5
+anchor_bottom = 0.328
+offset_left = -100.0
+offset_top = -17.544
+offset_right = 100.0
+offset_bottom = 17.456
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+step = 0.01
+value = 50.0
+
+[node name="MusicVolume" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.365
+anchor_right = 0.5
+anchor_bottom = 0.365
+offset_left = -54.5
+offset_top = -11.52
+offset_right = 54.5
+offset_bottom = 11.4802
+grow_horizontal = 2
+grow_vertical = 2
+text = "Music Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MusicVolumeSlider" type="HSlider" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.413
+anchor_right = 0.5
+anchor_bottom = 0.413
+offset_left = -100.0
+offset_top = -17.624
+offset_right = 100.0
+offset_bottom = 17.376
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+step = 0.01
+value = 50.0
+
+[node name="AmbientVolume" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.458
+anchor_right = 0.5
+anchor_bottom = 0.458
+offset_left = -65.0
+offset_top = -11.784
+offset_right = 65.0
+offset_bottom = 11.216
+grow_horizontal = 2
+grow_vertical = 2
+text = "Ambient Volume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmbientVolumeSlider" type="HSlider" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.505
+anchor_right = 0.5
+anchor_bottom = 0.505
+offset_left = -100.0
+offset_top = -17.24
+offset_right = 100.0
+offset_bottom = 17.76
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+step = 0.01
+value = 50.0
+
+[node name="BackButton" type="Button" parent="Control"]
+layout_direction = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.196
+anchor_top = 0.772
+anchor_right = 0.196
+anchor_bottom = 0.772
+offset_left = -99.792
+offset_top = -50.256
+offset_right = 100.208
+offset_bottom = 49.7436
+grow_vertical = 0
+text = "Back"
+
+[node name="QuitButton" type="Button" parent="Control"]
+layout_direction = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.804
+anchor_top = 0.772
+anchor_right = 0.804
+anchor_bottom = 0.772
+offset_left = -100.208
+offset_top = -50.256
+offset_right = 99.792
+offset_bottom = 49.744
+grow_horizontal = 0
+grow_vertical = 0
+text = "Quit"
+
+[node name="MenuButton" type="Button" parent="Control"]
+layout_direction = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.772
+anchor_right = 0.5
+anchor_bottom = 0.772
+offset_left = -100.0
+offset_top = -50.256
+offset_right = 100.0
+offset_bottom = 49.744
+grow_horizontal = 2
+grow_vertical = 0
+text = "Menu
+"
+
+[connection signal="drag_ended" from="Control/MaxVolumeSlider" to="." method="_on_max_volume_slider_drag_ended"]
+[connection signal="value_changed" from="Control/MaxVolumeSlider" to="." method="_on_max_volume_slider_value_changed"]
+[connection signal="drag_ended" from="Control/MusicVolumeSlider" to="." method="_on_music_volume_slider_drag_ended"]
+[connection signal="value_changed" from="Control/MusicVolumeSlider" to="." method="_on_music_volume_slider_value_changed"]
+[connection signal="drag_ended" from="Control/AmbientVolumeSlider" to="." method="_on_ambient_volume_slider_drag_ended"]
+[connection signal="value_changed" from="Control/AmbientVolumeSlider" to="." method="_on_ambient_volume_slider_value_changed"]
+[connection signal="pressed" from="Control/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="Control/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="Control/MenuButton" to="." method="_on_menu_button_pressed"]

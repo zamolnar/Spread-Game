@@ -13,3 +13,8 @@ func _process(delta):
 #function to call main scene from title screen
 func _on_button_pressed():
 	get_tree().change_scene_to_file("res://scenesAndScripts/Dungeon.tscn")
+
+
+func _on_settings_button_pressed():
+	get_tree().change_scene_to_file("res://scenesAndScripts/settings_screen.tscn")
+	pass # Replace with function body.
