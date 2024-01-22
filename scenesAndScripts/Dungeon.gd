@@ -12,7 +12,7 @@ var primPath	#AStar2D pathfinding object
 
 #parameter variables
 var tile_size = 32		#size of tiles from tilemap
-var num_rooms = 50		#number rooms for initial generate (gets cut down later)
+var num_rooms = 5		#number rooms for initial generate (gets cut down later)
 var min_size = 4		#smallest possible length for width/height
 var max_size = 8		#largest possible length for width/height
 var horizontalSpread = 300		#biases horizontal generation over vertical 
