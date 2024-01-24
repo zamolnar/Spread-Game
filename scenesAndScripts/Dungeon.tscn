@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddhij3kemm1j6"]
+[gd_scene load_steps=6 format=3 uid="uid://ddhij3kemm1j6"]
 
 [ext_resource type="Script" path="res://scenesAndScripts/Dungeon.gd" id="1_djrhe"]
 [ext_resource type="Texture2D" uid="uid://cvu7dvyjrejb3" path="res://Assets/placeholderArt/Terrain (16x16).png" id="2_1rrfo"]
+[ext_resource type="AudioStream" uid="uid://b5hku5gldt0hj" path="res://Assets/music/Pirate_Level_active.wav" id="3_uw5ib"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_3ql7h"]
 texture = ExtResource("2_1rrfo")
@@ -456,3 +457,8 @@ show_behind_parent = true
 tile_set = SubResource("TileSet_yrg8l")
 rendering_quadrant_size = 32
 format = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_uw5ib")
+autoplay = true
+bus = &"Active"

@@ -29,6 +29,8 @@ var Enemy1 = null
 func _ready():
 	randomize()
 	create_rooms()
+	#changes volume to player pref
+	AudioServer.set_bus_volume_db(1,linear_to_db(GlobalVar.MusicVol))
 	
 
 #control flow for imaging
