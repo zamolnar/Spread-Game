@@ -1,45 +1,38 @@
 extends Node
-class_name FSM
+class_name Enemy1_FSM
+#this class is designed to handle state transitioning for enemy1
 
-#this class is designed to handle state transitioning
-#for enemy1
+@export var initial_state : Enemy1State
+@export var current_state : Enemy1State
 
-
-#variables for storing/managing states
-@export var initial_state : State
-
-# Container for all possible enemy 1 states
-var states: Dictionary = {}
-var current_state : State
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
+#initalize the state machine by giving each child state a reference to the parent object it belongs to and enter the default starting_state
+func init(parent: Enemy1) ->void:
 	for child in get_children():
-		if child is State:
-			states[child.name.to_lower()] = child
+		child.parent = parent
+	change_state(initial_state)
 
-#Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	if current_state:
-		current_state.State_Update(delta)
-
-
-func _physics_process(delta):
-	if current_state:
-		current_state.State_Physics_Update(delta)
-
-
-func _on_child_transition(state, new_state_name):
-	if state != current_state:
-		return
-	
-	var new_state = states.get(new_state_name.to_lower())
-	if !new_state:
-		return
-	
+#exit logic, then enter logic
+func change_state(new_state: Enemy1State):
 	if current_state:
 		current_state.exit()
 	
-	new_state.enter()
 	current_state = new_state
+	current_state.enter()
 
+#update state input
+func process_input(event: InputEvent) -> void:
+	var new_state = current_state.process_input(event)
+	if new_state:
+		change_state(new_state)
+
+#update state frame
+func process_frame(delta: float) -> void:
+	var new_state = current_state.process_frame(delta)
+	if new_state:
+		change_state(new_state)
+
+#update state physics
+func process_physics(delta: float) -> void:
+	var new_state = current_state.process_physics(delta)
+	if new_state:
+		change_state(new_state)

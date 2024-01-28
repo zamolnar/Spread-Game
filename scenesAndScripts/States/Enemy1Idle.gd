@@ -1,39 +1,26 @@
-extends State
+extends Enemy1State
 class_name Enemy1Idle
-@onready var animated_sprite_2d = $"../../AnimatedSprite2D"
 
-var player : CharacterBody2D
-@export var enemy1: CharacterBody2D
-@export var move_speed := 200
+#export all other states that this one can reach
+@export var Enemy1Follow: Enemy1State
 
 #state variables
-var move_direction : Vector2
-var wander_time : float
+var move_direction
+var wander_time
 
-#override inherited methods
-func Enter():
+#override parent enter() function with state specific logic
+func enter() -> void:
+	super()
 	randomize_wander()
+#calling super utilizes the parent classes enter() // which contains the animation
+
+func process_physics(delta: float) -> Enemy1State:
+	wander_time -= delta
+	Enemy1.velocity = move_direction * move_speed
+	#Enemy1.move_and_slide()
+	return null
 
 
-func State_Update(delta: float):
-	animated_sprite_2d.play("idle")
-	if wander_time > 0:
-		wander_time -= delta
-	else:
-		randomize_wander()
-
-
-func State_Physics_Update(delta: float):
-	if enemy1:
-		enemy1.velocity = move_direction * move_speed
-		
-	var direction = player.global_position - enemy1.global_position
-	if direction.length() < 50:
-		Transitioned.emit(self, "Enemy1Idle")
-
-#methods specific to idle
-func randomize_wander():
+func randomize_wander() -> void:
 	move_direction = Vector2(randf_range(-1,1), randf_range(-1,1)).normalized()
 	wander_time = randf_range(1,5)
-
-

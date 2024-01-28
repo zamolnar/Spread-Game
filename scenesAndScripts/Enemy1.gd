@@ -2,14 +2,19 @@ extends CharacterBody2D
 class_name Enemy1
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
-@export var move_speed = 200
+@onready var state_machine = $Enemy1_FSM
 
+#the idea is that we will let the state machine handle the enemy processes
 
-func _physics_process(delta):
-	move_and_slide()
+func _ready() -> void:
+	#initialize state machine, passing reference of the player to the states
+	state_machine.init(self)
+
+func _unhandled_input(event: InputEvent) -> void:
+	state_machine.process_input(event)
+
+func _physics_process(delta: float) -> void:
+	state_machine.process_physics(delta)
 	
-	if (velocity.x > 1 || velocity.x < -1):
-		#animated_sprite_2d.animation = "run"
-		animated_sprite_2d.play("run")
-	else:
-		animated_sprite_2d.play("idle")
+func _process(delta: float) -> void:
+	state_machine.process_frame(delta)

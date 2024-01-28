@@ -119,19 +119,22 @@ script = ExtResource("1_rdliy")
 position = Vector2(63, 55)
 scale = Vector2(0.2, 0.2)
 sprite_frames = SubResource("SpriteFrames_kkdko")
-animation = &"idle"
+animation = &"run"
+frame = 4
+frame_progress = 0.141943
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(43, 57)
 shape = SubResource("CapsuleShape2D_85xfy")
 
-[node name="Enemy1_FSM" type="Node" parent="."]
+[node name="Enemy1_FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state", "current_state")]
 script = ExtResource("1_ruokr")
+initial_state = NodePath("Enemy1Idle")
+current_state = NodePath("Enemy1Idle")
 
-[node name="Enemy1Idle" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy1")]
+[node name="Enemy1Idle" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("Enemy1Follow")]
 script = ExtResource("15_msf24")
-enemy1 = NodePath("../..")
+Enemy1Follow = NodePath(".")
 
-[node name="Enemy1Follow" type="Node" parent="Enemy1_FSM" node_paths=PackedStringArray("enemy")]
+[node name="Enemy1Follow" type="Node" parent="Enemy1_FSM"]
 script = ExtResource("26_iu8ih")
-enemy = NodePath("../..")
